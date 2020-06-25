@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-probes-demo
+  labels:
+    app: k8s-probes-demo
+    
+spec:
+  selector:
+    matchLabels:
+      app: k8s-probes-demo
+  template:
+    metadata:
+      labels:
+        app: k8s-probes-demo
+    spec:
+      containers:
+      - name: troublemaker # Name of container in the pod.
+        image: kamranazeem/k8s-probes-demo:latest
+        imagePullPolicy: Always
+
+        # Notes: 
+        # * ENTRYPOINT in Docker = 'command' in k8s
+        # * CMD in Docker = 'args' in k8s 
+        # * If you provide "command", then you also need to provide "args".
+        #     For some reason the CMD defined in the container image is ignored,
+        #     when k8s "command" is specified.
+        command: ["/troublemaker.sh"]
+        args: ["nginx", "-g", "daemon off;"]
+
+        env:
+        # Double quotes for values of ENV variables are important.
+        - name: ROLE
+          #value: "NORMAL"
+          value: "TROUBLEMAKER"
+
+        volumeMounts:
+        - name: shared-directory
+          mountPath: /shared
+        
+        ports:
+        - name: alt-http
+          containerPort: 8888
+
+        resources:
+          limits:
+            cpu: 10m
+            memory: 16Mi
+          requests:
+            cpu: 5m
+            memory: 8Mi
+          
+      - name: probes-demo # Name of container in the pod.
+        image: kamranazeem/k8s-probes-demo:latest
+        imagePullPolicy: Always
+
+        env:
+        - name: DELAY_START
+          value: "5" # Double quotes for ENV variables are important.
+
+        ports:
+        - name: http 
+          containerPort: 80
+
+        resources:
+          limits:
+            cpu: 10m
+            memory: 16Mi
+          requests:
+            cpu: 5m
+            memory: 8Mi
+
+        volumeMounts:
+        - name: shared-directory
+          mountPath: /usr/share/nginx/html
+
+      volumes:
+      - name: shared-directory
+        emptyDir: {}
