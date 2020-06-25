@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: k8s-probes-demo
+  name: probes-demo
   labels:
-    app: k8s-probes-demo
+    app: probes-demo
     
 spec:
   selector:
     matchLabels:
-      app: k8s-probes-demo
+      app: probes-demo
   template:
     metadata:
       labels:
-        app: k8s-probes-demo
+        app: probes-demo
     spec:
       containers:
       - name: troublemaker # Name of container in the pod.
@@ -45,18 +45,18 @@ spec:
         resources:
           limits:
             cpu: 10m
-            memory: 16Mi
+            memory: 8Mi
           requests:
             cpu: 5m
-            memory: 8Mi
+            memory: 4Mi
           
       - name: probes-demo # Name of container in the pod.
         image: kamranazeem/k8s-probes-demo:latest
         imagePullPolicy: Always
 
         env:
-        - name: DELAY_START
-          value: "5" # Double quotes for ENV variables are important.
+        - name: START_DELAY
+          value: "1" # Double quotes for ENV variables are important.
 
         ports:
         - name: http 
@@ -65,10 +65,10 @@ spec:
         resources:
           limits:
             cpu: 10m
-            memory: 16Mi
+            memory: 8Mi
           requests:
             cpu: 5m
-            memory: 8Mi
+            memory: 4Mi
 
         volumeMounts:
         - name: shared-directory
