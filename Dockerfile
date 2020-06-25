@@ -1,7 +1,6 @@
 From nginx:alpine
 
-COPY readiness.txt     /usr/share/nginx/html/readiness.txt
-COPY liveness.txt      /usr/share/nginx/html/liveness.txt
+COPY probecheck.txt     /usr/share/nginx/html/probecheck.txt
 
 
 COPY troublemaker.sh /troublemaker.sh

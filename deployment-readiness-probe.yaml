@@ -83,7 +83,7 @@ spec:
         # 
         readinessProbe:
           httpGet:
-            path: /readiness.txt
+            path: /probecheck.txt
             port: 80
           initialDelaySeconds: 5
 

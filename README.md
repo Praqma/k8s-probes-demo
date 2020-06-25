@@ -1,7 +1,7 @@
 # About
 This repository contains support files to create a very simple and small Docker container image, which can be used to demonstrate how Kubernetes probes work. The same container image can be used as a simple container running NGINX web server on port 80, and the same can be used to run a so-called "trouble-maker" (as side-car) which tries to disrupt the readiness probes being run in the main container.
 
-The readiness probe is assumed to be "GET /readiness.txt" .
+The readiness probe is assumed to be "GET /probecheck.txt" .
 
 # How to use this image:
 
@@ -18,9 +18,9 @@ This container image can also run in a "TROUBLEMAKER" role. In that role, it kee
     As, for some silly reason the `CMD`  defined in the `Dockerfile` is ignored,
     when kubernetes `command` is specified manually.
 
-Also, for TROUBLEMAKER to be able to mess with the readiness probe, it needs to randomly delete and create the `/readiness.txt` file. It does that by running two shell processes, which fire up at random intervals. One of them creates the `/readiness.txt` file, and the other deletes the file at another random interval.
+Also, for TROUBLEMAKER to be able to mess with the readiness probe, it needs to randomly delete and create the `/probecheck.txt` file. It does that by running two shell processes, which fire up at random intervals. One of them creates the `/probecheck.txt` file, and the other deletes the file at another random interval.
 
-To be able to do that, the `DocumentRoot` directory of the main web container is mounted as a shared volume between the main container and the side-car. On the main container, it is mounted at the `/usr/share/nginx/html` mount-point. However, on the TROUBLEMAKER side-car, it is mounted on `/shared`. The troublemaker container knows that the `readiness.txt` file is found/accessible as `/shared/readiness.txt`.
+To be able to do that, the `DocumentRoot` directory of the main web container is mounted as a shared volume between the main container and the side-car. On the main container, it is mounted at the `/usr/share/nginx/html` mount-point. However, on the TROUBLEMAKER side-car, it is mounted on `/shared`. The troublemaker container knows that the `probecheck.txt` file is found/accessible as `/shared/probecheck.txt`.
 
 You can of-course run this in plain docker, or docker-compose, for very basic testing. However, the real behavior is observed in Kubernetes, and for that, some `deployment-*.yaml` files are provided.
 

@@ -83,7 +83,7 @@ spec:
         # 
         readinessProbe:
           httpGet:
-            path: /readiness.txt
+            path: /probecheck.txt
             port: 80
           initialDelaySeconds: 5
 
@@ -113,11 +113,11 @@ spec:
         #   Some start fast, some start slow.
         livenessProbe:
           httpGet:
-            path: /
+            path: /probecheck.txt
             port: 80
-          initialDelaySeconds: 300
+          initialDelaySeconds: 7
           # Retry the probe every X seconds (frequency):
-          periodSeconds: 10
+          periodSeconds: 3
           # Number of times this probe can fail,
           #   before kubernetes gives up and "restarts" the "container":
           failureThreshold: 1

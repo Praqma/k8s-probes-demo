@@ -1,27 +1,27 @@
 #!/bin/sh
 TIMESTAMP=$(date +%d-%m-%Y_%T)
-READINESS_FILE=/shared/readiness.txt
+PROBECHECK_FILE=/shared/probecheck.txt
 
 
-function create_readiness_file()
+function create_probecheck_file()
 {
   while true; do 
     DURATION=${RANDOM:1:2}
-    echo "Sleeping for ${DURATION} seconds before creating the readiness file ..."
+    echo "Sleeping for ${DURATION} seconds before creating the probecheck file ..."
     sleep ${DURATION}
-    echo "Creating ${READINESS_FILE} ..."
-    echo readiness > ${READINESS_FILE}
+    echo "Creating ${PROBECHECK_FILE} ..."
+    echo probecheck > ${PROBECHECK_FILE}
   done
 }
 
-function delete_readiness_file()
+function delete_probecheck_file()
 {
   while true; do
     DURATION=${RANDOM:1:2}
-    echo "Sleeping for ${DURATION} seconds before deleting the readiness file ..."
+    echo "Sleeping for ${DURATION} seconds before deleting the probecheck file ..."
     sleep ${DURATION}
-    echo "Deleting ${READINESS_FILE} ..."
-    rm ${READINESS_FILE}
+    echo "Deleting ${PROBECHECK_FILE} ..."
+    rm ${PROBECHECK_FILE}
   done
 }
 
@@ -35,11 +35,11 @@ if [ "${ROLE}" == "TROUBLEMAKER" ]; then
   
   # Fork the following two processes, 
   #  so they keep doing their thing in the background, with random delay.
-  echo "Forking create_readiness_file in background..."
-  create_readiness_file &
+  echo "Forking create_probecheck_file in background..."
+  create_probecheck_file &
 
-  echo "Forking delete_readiness_file in background..."
-  delete_readiness_file &
+  echo "Forking delete_probecheck_file in background..."
+  delete_probecheck_file &
 
 else
 
