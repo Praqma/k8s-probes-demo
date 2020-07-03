@@ -1,62 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: probes-demo
+  name: simple-liveness
   labels:
-    app: probes-demo
+    app: simple-liveness
     
 spec:
   selector:
     matchLabels:
-      app: probes-demo
+      app: simple-liveness
   template:
     metadata:
       labels:
-        app: probes-demo
+        app: simple-liveness
     spec:
       containers:
-      - name: troublemaker # Name of container in the pod.
+      - name: simple-liveness # Name of container in the pod.
         image: kamranazeem/k8s-probes-demo:latest
-        imagePullPolicy: Always
-
-        # Notes: 
-        # * ENTRYPOINT in Docker = 'command' in k8s
-        # * CMD in Docker = 'args' in k8s 
-        # * If you provide "command", then you also need to provide "args".
-        #     For some reason the CMD defined in the container image is ignored,
-        #     when k8s "command" is specified.
-        command: ["/troublemaker.sh"]
-        args: ["nginx", "-g", "daemon off;"]
-
-        env:
-        # Double quotes for values of ENV variables are important.
-        - name: ROLE
-          #value: "NORMAL"
-          value: "TROUBLEMAKER"
-
-        volumeMounts:
-        - name: shared-directory
-          mountPath: /shared
-        
-        ports:
-        - name: alt-http
-          containerPort: 8888
-
-        resources:
-          limits:
-            cpu: 10m
-            memory: 8Mi
-          requests:
-            cpu: 5m
-            memory: 4Mi
-          
-      - name: probes-demo # Name of container in the pod.
-        image: kamranazeem/k8s-probes-demo:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
 
         env:
         - name: START_DELAY
-          value: "10" # Double quotes for ENV variables are important.
+          value: "30" # Double quotes for ENV variables are important.
 
         ports:
         - name: http 
@@ -87,16 +52,25 @@ spec:
           httpGet:
             path: /probecheck.txt
             port: 80
-          initialDelaySeconds: 7
+          initialDelaySeconds: 5
           # Retry the probe every X seconds (frequency):
           periodSeconds: 3
           # Number of times this probe can fail,
           #   before kubernetes gives up and "restarts" the "container":
           failureThreshold: 1
-        volumeMounts:
-        - name: shared-directory
-          mountPath: /usr/share/nginx/html
 
-      volumes:
-      - name: shared-directory
-        emptyDir: {}
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: simple-liveness
+  labels:
+    app: simple-liveness
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: simple-liveness

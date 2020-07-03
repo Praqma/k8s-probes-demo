@@ -1,27 +1,50 @@
 #!/bin/sh
 TIMESTAMP=$(date +%d-%m-%Y_%T)
-PROBECHECK_FILE=/shared/probecheck.txt
+READINESSCHECK_FILE=/shared/readinesscheck.txt
+LIVENESSCHECK_FILE=/shared/livenesscheck.txt
 
 
-function create_probecheck_file()
+function create_readinesscheck_file()
 {
   while true; do 
     DURATION=${RANDOM:1:2}
-    echo "Sleeping for ${DURATION} seconds before creating the probecheck file ..."
+    echo "Sleeping for ${DURATION} seconds before creating the readinesscheck file ..."
     sleep ${DURATION}
-    echo "Creating ${PROBECHECK_FILE} ..."
-    echo probecheck > ${PROBECHECK_FILE}
+    echo "Creating ${READINESSCHECK_FILE} ..."
+    echo readinesscheck > ${READINESSCHECK_FILE}
   done
 }
 
-function delete_probecheck_file()
+function delete_readinesscheck_file()
 {
   while true; do
     DURATION=${RANDOM:1:2}
-    echo "Sleeping for ${DURATION} seconds before deleting the probecheck file ..."
+    echo "Sleeping for ${DURATION} seconds before deleting the readinesscheck file ..."
     sleep ${DURATION}
-    echo "Deleting ${PROBECHECK_FILE} ..."
-    rm ${PROBECHECK_FILE}
+    echo "Deleting ${READINESSCHECK_FILE} ..."
+    rm ${READINESSCHECK_FILE}
+  done
+}
+
+function create_livenesscheck_file()
+{
+  while true; do 
+    DURATION=${RANDOM:1:2}
+    echo "Sleeping for ${DURATION} seconds before creating the readinesscheck file ..."
+    sleep ${DURATION}
+    echo "Creating ${LIVENESSCHECK_FILE} ..."
+    echo livenesscheck > ${LIVENESSCHECK_FILE}
+  done
+}
+
+function delete_livenesscheck_file()
+{
+  while true; do
+    DURATION=${RANDOM:1:2}
+    echo "Sleeping for ${DURATION} seconds before deleting the livenesscheck file ..."
+    sleep ${DURATION}
+    echo "Deleting ${LIVENESSCHECK_FILE} ..."
+    rm ${LIVENESSCHECK_FILE}
   done
 }
 
@@ -33,13 +56,21 @@ if [ "${ROLE}" == "TROUBLEMAKER" ]; then
   echo ${MESSAGE}
   echo "<h1>${MESSAGE}</h1>" > /usr/share/nginx/html/index.html
   
-  # Fork the following two processes, 
+  # Fork the following processes, 
   #  so they keep doing their thing in the background, with random delay.
-  echo "Forking create_probecheck_file in background..."
-  create_probecheck_file &
+  
+  echo "Forking create_readinesscheck_file in background..."
+  create_readinesscheck_file &
 
-  echo "Forking delete_probecheck_file in background..."
-  delete_probecheck_file &
+  echo "Forking delete_readinesscheck_file in background..."
+  delete_readinesscheck_file &
+
+  echo "Forking create_livenesscheck_file in background..."
+  create_livenesscheck_file &
+
+  echo "Forking delete_livenesscheck_file in background..."
+  delete_livenesscheck_file &
+
 
 else
 

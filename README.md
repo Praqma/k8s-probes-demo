@@ -1,7 +1,7 @@
 # About
-This repository contains support files to create a very simple and small Docker container image, which can be used to demonstrate how Kubernetes probes work. The same container image can be used as a simple container running NGINX web server on port 80, and the same can be used to run a so-called "trouble-maker" (as side-car) which tries to disrupt the readiness probes being run in the main container.
+This repository contains support files to create a very simple and small Docker container image, which can be used to demonstrate how Kubernetes probes work. The same container image can be used as a simple container running NGINX web server on port 80, and the same can be used to run a so-called "troublemaker" (as side-car) which tries to disrupt the readiness probes being run in the main container.
 
-The readiness probe is assumed to be "GET /probecheck.txt" .
+The readiness probe is assumed to be "GET /readinesscheck.txt" .
 
 # How to use this image:
 
@@ -9,7 +9,7 @@ If you run this image without any ENV variables, it will simply start a NGINX we
 
 You can then use "readiness probes" in the related kubernetes deployment file to check if the container is considered ready for service.
 
-This container image can also run in a "TROUBLEMAKER" role. In that role, it keeps messing up with the readiness probe, the effects of which can then be observed for learning purpose. The image runs in this "TROUBLEMAKER" role, when a environment variable name "ROLE" is set to "TROUBLEMAKER". You will need to set the kubernetes `command` to `["/troublemaker.sh"]` and set the kubernetes `args` to  `["nginx", "-g", "daemon off;"]`.
+This container image can also run in a "TROUBLEMAKER" role. In that role, it keeps messing up with the readiness and liveness probes; the effects of which can then be observed for learning purpose. The image runs in this "TROUBLEMAKER" role, when a environment variable name "ROLE" is set to "TROUBLEMAKER". You will need to set the kubernetes `command` to `["/troublemaker.sh"]` and set the kubernetes `args` to  `["nginx", "-g", "daemon off;"]`.
 
 **Remember:**
 * `ENTRYPOINT` in Docker = `command` in kubernetes
@@ -18,10 +18,13 @@ This container image can also run in a "TROUBLEMAKER" role. In that role, it kee
     As, for some silly reason the `CMD`  defined in the `Dockerfile` is ignored,
     when kubernetes `command` is specified manually.
 
-Also, for TROUBLEMAKER to be able to mess with the readiness probe, it needs to randomly delete and create the `/probecheck.txt` file. It does that by running two shell processes, which fire up at random intervals. One of them creates the `/probecheck.txt` file, and the other deletes the file at another random interval.
+For TROUBLEMAKER to be able to mess with the readiness probe, it needs to randomly delete and create the `/readinesscheck.txt` file. It does that by running two shell processes, which fire up at random intervals. One of them creates the `/readinesscheck.txt` file, and the other deletes the file at another random interval.
 
-To be able to do that, the `DocumentRoot` directory of the main web container is mounted as a shared volume between the main container and the side-car. On the main container, it is mounted at the `/usr/share/nginx/html` mount-point. However, on the TROUBLEMAKER side-car, it is mounted on `/shared`. The troublemaker container knows that the `probecheck.txt` file is found/accessible as `/shared/probecheck.txt`.
+For TROUBLEMAKER to be able to mess with the liveness probe, it needs to randomly delete and create the `/livenesscheck.txt` file. It does that by running two shell processes, which fire up at random intervals. One of them creates the `/livenesscheck.txt` file, and the other deletes the file at another random interval.
+
+To be able to do that, the `DocumentRoot` directory of the main web container is mounted as a shared volume between the main container and the side-car. On the main container, it is mounted at the `/usr/share/nginx/html` mount-point. However, on the TROUBLEMAKER side-car, it is mounted on `/shared`. The troublemaker container knows that the `readinesscheck.txt` file is found/accessible as `/shared/readinesscheck.txt`, and the `livenesscheck.txt` file is found/accessible as `/shared/livenesscheck.txt`.
 
 You can of-course run this in plain docker, or docker-compose, for very basic testing. However, the real behavior is observed in Kubernetes, and for that, some `deployment-*.yaml` files are provided.
 
 
+**Note:** Readiness and Liveness probes can be completely different. I chose both to be HTTP, as they are easier to see in action / easier to study.
