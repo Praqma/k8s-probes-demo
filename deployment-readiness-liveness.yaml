@@ -17,7 +17,8 @@ spec:
       containers:
       - name: troublemaker # Name of container in the pod.
         image: kamranazeem/k8s-probes-demo:latest
-        imagePullPolicy: IfNotPresent
+        # imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
 
         # Notes: 
         # * ENTRYPOINT in Docker = 'command' in k8s
@@ -52,7 +53,8 @@ spec:
           
       - name: probes-demo # Name of container in the pod.
         image: kamranazeem/k8s-probes-demo:latest
-        imagePullPolicy: IfNotPresent
+        # imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
 
         env:
         - name: START_DELAY
