@@ -10,10 +10,10 @@ echo "Container started at: ${TIMESTAMP}"
 
 # Check if START_DELAY is defined/set or not:
 if [ "${START_DELAY}" != "" ]; then
-  echo "START_DELAY is set - Simulating a slow-start container by sleeping for ${START_DELAY} seconds ..."
+  echo "${TIMESTAMP} - START_DELAY is set - Simulating a slow-start container by sleeping for ${START_DELAY} seconds ..."
   sleep ${START_DELAY}
 else
-  echo "START_DELAY was not set, or was set to zero - not sleeping ..."
+  echo "${TIMESTAMP} - START_DELAY was not set, or was set to zero - not sleeping ..."
 fi
 
 # Create index.html with a (new) time-stamp-ed message/heading:
