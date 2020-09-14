@@ -31,8 +31,8 @@ spec:
         env:
         # Double quotes for values of ENV variables are important.
         - name: ROLE
-          value: "NORMAL"
-          #value: "TROUBLEMAKER"
+          #value: "NORMAL"
+          value: "TROUBLEMAKER"
 
         volumeMounts:
         - name: shared-directory
