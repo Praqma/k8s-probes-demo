@@ -30,10 +30,10 @@ spec:
         resources:
           limits:
             cpu: 10m
-            memory: 8Mi
+            memory: 20Mi
           requests:
             cpu: 5m
-            memory: 4Mi
+            memory: 20Mi
        
         # Liveliness probes are used while the container is up, 
         #   to see if the service is "still" alive.
@@ -50,7 +50,7 @@ spec:
         #   Some start fast, some start slow.
         livenessProbe:
           httpGet:
-            path: /probecheck.txt
+            path: /livenesscheck.txt
             port: 80
           initialDelaySeconds: 5
           # Retry the probe every X seconds (frequency):
