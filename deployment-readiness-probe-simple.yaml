@@ -30,10 +30,10 @@ spec:
         resources:
           limits:
             cpu: 10m
-            memory: 8Mi
+            memory: 20Mi
           requests:
             cpu: 5m
-            memory: 4Mi
+            memory: 20Mi
 
         # Readiness probes help Kubernetes know when to start sending traffic to the pod.
         #   This probe helps kubernetes to "add" or "remove" this pod from the service in front of it.
@@ -48,7 +48,7 @@ spec:
         # 
         readinessProbe:
           httpGet:
-            path: /probecheck.txt
+            path: /readinesscheck.txt
             port: 80
           initialDelaySeconds: 5
 
