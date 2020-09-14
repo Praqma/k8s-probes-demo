@@ -46,10 +46,10 @@ spec:
         resources:
           limits:
             cpu: 10m
-            memory: 8Mi
+            memory: 20Mi
           requests:
             cpu: 5m
-            memory: 4Mi
+            memory: 20Mi
           
       - name: probes-demo # Name of container in the pod.
         image: kamranazeem/k8s-probes-demo:latest
@@ -67,10 +67,10 @@ spec:
         resources:
           limits:
             cpu: 10m
-            memory: 8Mi
+            memory: 20Mi
           requests:
             cpu: 5m
-            memory: 4Mi
+            memory: 20Mi
 
         # Readiness probes help Kubernetes know when to start sending traffic to the pod.
         #   This probe helps kubernetes to "add" or "remove" this pod from the service in front of it.
@@ -90,7 +90,7 @@ spec:
           initialDelaySeconds: 5
 
           # Retry the probe every X seconds (frequency):
-          periodSeconds: 2
+          periodSeconds: 5
 
           # Number of times this probe can fail ,
           #   before kubernetes gives up and marks the "pod" as "Unready":
@@ -123,6 +123,7 @@ spec:
           # Number of times this probe can fail,
           #   before kubernetes gives up and "restarts" the "container":
           failureThreshold: 1
+
         volumeMounts:
         - name: shared-directory
           mountPath: /usr/share/nginx/html
