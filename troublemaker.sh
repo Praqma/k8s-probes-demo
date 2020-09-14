@@ -7,44 +7,53 @@ LIVENESSCHECK_FILE=/shared/livenesscheck.txt
 function create_readinesscheck_file()
 {
   while true; do 
+    local TIMESTAMP=$(date +%d-%m-%Y_%T)
     DURATION=${RANDOM:1:2}
-    echo "Sleeping for ${DURATION} seconds before creating the readinesscheck file ..."
+    echo "${TIMESTAMP} - Sleeping for ${DURATION} seconds before creating the readiness-check file ..."
     sleep ${DURATION}
-    echo "Creating ${READINESSCHECK_FILE} ..."
     echo readinesscheck > ${READINESSCHECK_FILE}
+    local TIMESTAMP=$(date +%d-%m-%Y_%T)
+    echo "${TIMESTAMP} - Created readiness-check file: '${READINESSCHECK_FILE}' after sleeping for ${DURATION} seconds ..."
+    
   done
 }
 
 function delete_readinesscheck_file()
 {
   while true; do
+    local TIMESTAMP=$(date +%d-%m-%Y_%T)
     DURATION=${RANDOM:1:2}
-    echo "Sleeping for ${DURATION} seconds before deleting the readinesscheck file ..."
+    echo "${TIMESTAMP} - Sleeping for ${DURATION} seconds before deleting the readiness-check file ..."
     sleep ${DURATION}
-    echo "Deleting ${READINESSCHECK_FILE} ..."
     rm ${READINESSCHECK_FILE}
+    local TIMESTAMP=$(date +%d-%m-%Y_%T)
+    echo "${TIMESTAMP} - Deleted readiness-check file: '${READINESSCHECK_FILE}' after sleeping for ${DURATION} seconds ..."
   done
 }
 
 function create_livenesscheck_file()
 {
   while true; do 
+    local TIMESTAMP=$(date +%d-%m-%Y_%T)
     DURATION=${RANDOM:1:2}
-    echo "Sleeping for ${DURATION} seconds before creating the readinesscheck file ..."
+    echo "${TIMESTAMP} - Sleeping for ${DURATION} seconds before creating the liveness-check file ..."
     sleep ${DURATION}
-    echo "Creating ${LIVENESSCHECK_FILE} ..."
     echo livenesscheck > ${LIVENESSCHECK_FILE}
+    local TIMESTAMP=$(date +%d-%m-%Y_%T)
+    echo "${TIMESTAMP} - Created liveness-check file: '${LIVENESSCHECK_FILE}' after sleeping for ${DURATION} seconds ..."
   done
 }
 
 function delete_livenesscheck_file()
 {
   while true; do
+    local TIMESTAMP=$(date +%d-%m-%Y_%T)
     DURATION=${RANDOM:1:2}
-    echo "Sleeping for ${DURATION} seconds before deleting the livenesscheck file ..."
+    echo "${TIMESTAMP} - Sleeping for ${DURATION} seconds before deleting the livenesscheck file ..."
     sleep ${DURATION}
-    echo "Deleting ${LIVENESSCHECK_FILE} ..."
     rm ${LIVENESSCHECK_FILE}
+    local TIMESTAMP=$(date +%d-%m-%Y_%T)
+    echo "${TIMESTAMP} - Deleted liveness-check file: '${LIVENESSCHECK_FILE}' after sleeping for ${DURATION} seconds ..."
   done
 }
 
@@ -52,29 +61,29 @@ function delete_livenesscheck_file()
 sed -i "s/80;/8888;/g" /etc/nginx/conf.d/default.conf
 
 if [ "${ROLE}" == "TROUBLEMAKER" ]; then
-  MESSAGE="Started TROUBLEMAKER container in TROUBLEMAKER mode - on port 8888 - at: ${TIMESTAMP}"
+  MESSAGE=" ${TIMESTAMP} - Started container in TROUBLEMAKER mode - on port 8888"
   echo ${MESSAGE}
   echo "<h1>${MESSAGE}</h1>" > /usr/share/nginx/html/index.html
   
   # Fork the following processes, 
   #  so they keep doing their thing in the background, with random delay.
   
-  echo "Forking create_readinesscheck_file in background..."
+  echo "${TIMESTAMP} - Forking create_readiness-check_file in background..."
   create_readinesscheck_file &
 
-  echo "Forking delete_readinesscheck_file in background..."
+  echo "${TIMESTAMP} - Forking delete_readiness-check_file in background..."
   delete_readinesscheck_file &
 
-  echo "Forking create_livenesscheck_file in background..."
+  echo "${TIMESTAMP} - Forking create_liveness-check_file in background..."
   create_livenesscheck_file &
 
-  echo "Forking delete_livenesscheck_file in background..."
+  echo "${TIMESTAMP} - Forking delete_liveness-check_file in background..."
   delete_livenesscheck_file &
 
 
 else
 
-  MESSAGE="Started TROUBLEMAKER container in NORMAL mode - on port 8888 - at: ${TIMESTAMP}"
+  MESSAGE="${TIMESTAMP} - Started container in NORMAL mode - on port 8888"
   echo ${MESSAGE}
   echo "<h1>${MESSAGE}</h1>" > /usr/share/nginx/html/index.html
 
