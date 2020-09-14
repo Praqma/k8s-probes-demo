@@ -1,24 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: probes-demo
+  name: liveness-with-troublemaker
   labels:
-    app: probes-demo
+    app: liveness-with-troublemaker
     
 spec:
   selector:
     matchLabels:
-      app: probes-demo
+      app: liveness-with-troublemaker
   template:
     metadata:
       labels:
-        app: probes-demo
+        app: liveness-with-troublemaker
     spec:
       containers:
       - name: troublemaker # Name of container in the pod.
         image: kamranazeem/k8s-probes-demo:latest
-        # imagePullPolicy: IfNotPresent
-        imagePullPolicy: Always
 
         # Notes: 
         # * ENTRYPOINT in Docker = 'command' in k8s
@@ -51,10 +49,8 @@ spec:
             cpu: 5m
             memory: 20Mi
           
-      - name: probes-demo # Name of container in the pod.
+      - name: liveness-with-troublemaker # Name of container in the pod.
         image: kamranazeem/k8s-probes-demo:latest
-        # imagePullPolicy: IfNotPresent
-        imagePullPolicy: Always
 
         env:
         - name: START_DELAY
@@ -71,35 +67,7 @@ spec:
           requests:
             cpu: 5m
             memory: 20Mi
-
-        # Readiness probes help Kubernetes know when to start sending traffic to the pod.
-        #   This probe helps kubernetes to "add" or "remove" this pod from the service in front of it.
-        #   So, when the probe passes it is added to the service,
-        #       when it fails at any time in it's life, kubernetes removes it from the service.
-        # Restarting the "stuck" container is the job of livenessProbe, explained further down.
-        # Note: Readiness probe runs throughout the life of the container - every "periodSeconds",
-        #       not just at the container start time!
-        #
-        # The WITPASS/wordpress images takes long to start, 
-        #   because themes and plugins are pulled at container start time.
-        # 
-        readinessProbe:
-          httpGet:
-            path: /readinesscheck.txt
-            port: 80
-          initialDelaySeconds: 5
-
-          # Retry the probe every X seconds (frequency):
-          periodSeconds: 5
-
-          # Number of times this probe can fail ,
-          #   before kubernetes gives up and marks the "pod" as "Unready":
-          failureThreshold: 24
-
-          # In the case above, the Pod will be marked "Unready",
-          #   if the probe does not pass 5 x 24 = 120 seconds.
-          successThreshold: 1
-        
+       
         # Liveliness probes are used while the container is up, 
         #   to see if the service is "still" alive.
         # If the service does not respond, then kubernetes kills the container/pod,
@@ -117,13 +85,12 @@ spec:
           httpGet:
             path: /livenesscheck.txt
             port: 80
-          initialDelaySeconds: 5
+          initialDelaySeconds: 15
           # Retry the probe every X seconds (frequency):
-          periodSeconds: 3
+          periodSeconds: 30
           # Number of times this probe can fail,
           #   before kubernetes gives up and "restarts" the "container":
           failureThreshold: 1
-
         volumeMounts:
         - name: shared-directory
           mountPath: /usr/share/nginx/html

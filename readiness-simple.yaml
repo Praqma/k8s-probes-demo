@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: simple-readiness
+  name: readiness-simple
   labels:
-    app: simple-readiness
+    app: readiness-simple
     
 spec:
   selector:
     matchLabels:
-      app: simple-readiness
+      app: readiness-simple
   template:
     metadata:
       labels:
-        app: simple-readiness
+        app: readiness-simple
     spec:
       containers:
-      - name: simple-readiness # Name of container in the pod.
+      - name: readiness-simple # Name of container in the pod.
         image: kamranazeem/k8s-probes-demo:latest
         # imagePullPolicy: Always
 
@@ -68,12 +68,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: simple-readiness
+  name: readiness-simple
   labels:
-    app: simple-readiness
+    app: readiness-simple
 spec:
   ports:
     - port: 80
   selector:
-    app: simple-readiness
+    app: readiness-simple
   type: ClusterIP        

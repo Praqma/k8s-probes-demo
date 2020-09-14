@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: probes-demo
+  name: simple-no-probes
   labels:
-    app: probes-demo
+    app: simple-no-probes
     
 spec:
   selector:
     matchLabels:
-      app: probes-demo
+      app: simple-no-probes
   template:
     metadata:
       labels:
-        app: probes-demo
+        app: simple-no-probes
     spec:
       containers:
       - name: troublemaker # Name of container in the pod.
@@ -50,8 +50,8 @@ spec:
             cpu: 5m
             memory: 20Mi
           
-      - name: probes-demo # Name of container in the pod.
-        image: kamranazeem/k8s-probes-demo:latest
+      - name: simple-no-probes # Name of container in the pod.
+        image: kamranazeem/k8s-simple-no-probes:latest
         imagePullPolicy: Always
 
         env:

@@ -1,23 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: simple-liveness
+  name: liveness-simple
   labels:
-    app: simple-liveness
+    app: liveness-simple
     
 spec:
   selector:
     matchLabels:
-      app: simple-liveness
+      app: liveness-simple
   template:
     metadata:
       labels:
-        app: simple-liveness
+        app: liveness-simple
     spec:
       containers:
-      - name: simple-liveness # Name of container in the pod.
+      - name: liveness-simple # Name of container in the pod.
         image: kamranazeem/k8s-probes-demo:latest
-        imagePullPolicy: IfNotPresent
 
         env:
         - name: START_DELAY
@@ -64,13 +63,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: simple-liveness
+  name: liveness-simple
   labels:
-    app: simple-liveness
+    app: liveness-simple
 spec:
   ports:
   - port: 80
     protocol: TCP
     targetPort: 80
   selector:
-    app: simple-liveness
+    app: liveness-simple

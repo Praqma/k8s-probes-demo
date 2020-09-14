@@ -17,7 +17,6 @@ spec:
       containers:
       - name: troublemaker # Name of container in the pod.
         image: kamranazeem/k8s-probes-demo:latest
-        imagePullPolicy: Always
 
         # Notes: 
         # * ENTRYPOINT in Docker = 'command' in k8s
@@ -52,6 +51,7 @@ spec:
           
       - name: probes-demo # Name of container in the pod.
         image: kamranazeem/k8s-probes-demo:latest
+        # imagePullPolicy: IfNotPresent
         imagePullPolicy: Always
 
         env:
@@ -88,7 +88,7 @@ spec:
           initialDelaySeconds: 5
 
           # Retry the probe every X seconds (frequency):
-          periodSeconds: 2
+          periodSeconds: 5
 
           # Number of times this probe can fail ,
           #   before kubernetes gives up and marks the "pod" as "Unready":
@@ -98,6 +98,30 @@ spec:
           #   if the probe does not pass 5 x 24 = 120 seconds.
           successThreshold: 1
         
+        # Liveliness probes are used while the container is up, 
+        #   to see if the service is "still" alive.
+        # If the service does not respond, then kubernetes kills the container/pod,
+        #   and restarts it.
+        # It is therefore important to have initialDelaySeconds for the "livenessProbe"
+        #   to be as late as possible.
+        # If it is a small number, and if for some reason container is not started yet,
+        #   (in case of slow application startup), then kubernetes will restart it.
+        # This means the pod will stuck in a crash loop, and will never start.
+        # Remember, livenessProbe does NOT start AFTER readiness probe.
+        #   In-fact, they both start at the same time.
+        # Liveness probe will vary from application to application. 
+        #   Some start fast, some start slow.
+        livenessProbe:
+          httpGet:
+            path: /livenesscheck.txt
+            port: 80
+          initialDelaySeconds: 15
+          # Retry the probe every X seconds (frequency):
+          periodSeconds: 5
+          # Number of times this probe can fail,
+          #   before kubernetes gives up and "restarts" the "container":
+          failureThreshold: 1
+
         volumeMounts:
         - name: shared-directory
           mountPath: /usr/share/nginx/html
