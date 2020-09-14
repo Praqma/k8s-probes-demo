@@ -1,7 +1,8 @@
 # About
-This repository contains support files to create a very simple and small Docker container image, which can be used to demonstrate how Kubernetes probes work. The same container image can be used as a simple container running NGINX web server on port 80, and the same can be used to run a so-called "troublemaker" (as side-car) which tries to disrupt the readiness probes being run in the main container.
+This repository contains support files to create a very small and simple Docker container image, which can be used to demonstrate how Kubernetes probes work. This container image can be used as a simple container running NGINX web server on port 80, and the same can be used to run in "troublemaker" mode, as side-car, which tries to disrupt the readiness probes being run in the main container.
 
-The readiness probe is assumed to be "GET /readinesscheck.txt" .
+* The readiness probe is assumed to be "GET /readinesscheck.txt" .
+* The livenesss probe is assumed to be "GET /livenesscheck.txt" .
 
 # How to use this image:
 
@@ -22,7 +23,7 @@ For TROUBLEMAKER to be able to mess with the readiness probe, it needs to random
 
 For TROUBLEMAKER to be able to mess with the liveness probe, it needs to randomly delete and create the `/livenesscheck.txt` file. It does that by running two shell processes, which fire up at random intervals. One of them creates the `/livenesscheck.txt` file, and the other deletes the file at another random interval.
 
-To be able to do that, the `DocumentRoot` directory of the main web container is mounted as a shared volume between the main container and the side-car. On the main container, it is mounted at the `/usr/share/nginx/html` mount-point. However, on the TROUBLEMAKER side-car, it is mounted on `/shared`. The troublemaker container knows that the `readinesscheck.txt` file is found/accessible as `/shared/readinesscheck.txt`, and the `livenesscheck.txt` file is found/accessible as `/shared/livenesscheck.txt`.
+To be able to do these, the `DocumentRoot` directory of the main web container is mounted as a shared volume between the main container and the side-car. On the main container, it is mounted at the `/usr/share/nginx/html` mount-point. However, on the TROUBLEMAKER side-car, it is mounted on `/shared`. The troublemaker container knows that the `readinesscheck.txt` file is found/accessible as `/shared/readinesscheck.txt`, and the `livenesscheck.txt` file is found/accessible as `/shared/livenesscheck.txt`.
 
 You can of-course run this in plain docker, or docker-compose, for very basic testing. However, the real behavior is observed in Kubernetes, and for that, some `deployment-*.yaml` files are provided.
 
