@@ -1,7 +1,7 @@
 From nginx:alpine
 
-RUN echo "readinesscheck"  > /usr/share/nginx/html/readinesscheck.txt \
- && echo "livenesscheck"  > /usr/share/nginx/html/livenesscheck.txt
+RUN echo "ready"  > /usr/share/nginx/html/readinesscheck.txt \
+ && echo "alive"  > /usr/share/nginx/html/livenesscheck.txt
 
 COPY troublemaker.sh /troublemaker.sh
 COPY entrypoint.sh /entrypoint.sh
