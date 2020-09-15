@@ -15,12 +15,13 @@ spec:
         app: liveness-simple
     spec:
       containers:
-      - name: liveness-simple # Name of container in the pod.
+      - name: liveness-simple
         image: kamranazeem/k8s-probes-demo:latest
 
         env:
         - name: START_DELAY
-          value: "30" # Double quotes for ENV variables are important.
+          # Double quotes required for values of ENV variables.
+          value: "30"
 
         ports:
         - name: http 
