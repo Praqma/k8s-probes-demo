@@ -51,7 +51,7 @@ spec:
             memory: 20Mi
           
       - name: simple-no-probes # Name of container in the pod.
-        image: kamranazeem/k8s-simple-no-probes:latest
+        image: kamranazeem/k8s-probes-demo:latest
         imagePullPolicy: Always
 
         env:
