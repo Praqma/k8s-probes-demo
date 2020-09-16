@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: probes-demo
+  name: readiness-liveness
   labels:
-    app: probes-demo
+    app: readiness-liveness
     
 spec:
   selector:
     matchLabels:
-      app: probes-demo
+      app: readiness-liveness
   template:
     metadata:
       labels:
-        app: probes-demo
+        app: readiness-liveness
     spec:
       containers:
-      - name: probes-demo
+      - name: readiness-liveness
         image: kamranazeem/k8s-probes-demo:latest
         imagePullPolicy: Always
 
@@ -95,3 +95,17 @@ spec:
       volumes:
       - name: shared-directory
         emptyDir: {}
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: readiness-liveness
+  labels:
+    app: readiness-liveness
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: readiness-liveness
+  type: ClusterIP        
