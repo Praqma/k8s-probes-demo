@@ -1,21 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: probes-demo
+  name: readiness-liveness-with-troublemaker
   labels:
-    app: probes-demo
+    app: readiness-liveness-with-troublemaker
     
 spec:
   selector:
     matchLabels:
-      app: probes-demo
+      app: readiness-liveness-with-troublemaker
   template:
     metadata:
       labels:
-        app: probes-demo
+        app: readiness-liveness-with-troublemaker
     spec:
       containers:
-      - name: troublemaker # Name of container in the pod.
+      - name: troublemaker 
+        # Name of container in the pod.
         image: kamranazeem/k8s-probes-demo:latest
 
         # Notes: 
@@ -49,14 +50,16 @@ spec:
             cpu: 5m
             memory: 20Mi
           
-      - name: probes-demo # Name of container in the pod.
+      - name: readiness-liveness-with-troublemaker 
+        # Name of container in the pod.
         image: kamranazeem/k8s-probes-demo:latest
         # imagePullPolicy: IfNotPresent
         imagePullPolicy: Always
 
         env:
         - name: START_DELAY
-          value: "10" # Double quotes for ENV variables are important.
+          value: "10" 
+          # Double quotes for ENV variables are important.
 
         ports:
         - name: http 
@@ -129,3 +132,17 @@ spec:
       volumes:
       - name: shared-directory
         emptyDir: {}
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: readiness-liveness-with-troublemaker
+  labels:
+    app: readiness-liveness-with-troublemaker
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: readiness-liveness-with-troublemaker
+  type: ClusterIP   
