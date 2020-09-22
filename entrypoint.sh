@@ -6,7 +6,7 @@ echo "${TIMESTAMP} - Container started"
 
 # Check if START_DELAY is defined/set or not:
 if [ "${START_DELAY}" != "" ]; then
-  echo "${TIMESTAMP} - START_DELAY is set - Simulating a slow-starting container by sleeping for ${START_DELAY} seconds ..."
+  echo "${TIMESTAMP} - START_DELAY is set to ${START_DELAY} - Simulating a slow-starting container by sleeping for ${START_DELAY} seconds ..."
   sleep ${START_DELAY}
 else
   echo "${TIMESTAMP} - START_DELAY was not set, or was set to zero - not sleeping ..."
@@ -19,5 +19,5 @@ echo "${MESSAGE}"
 echo "<h1>${MESSAGE}</h1>" > ${DOCUMENT_ROOT}/index.html
 
 # Run whatever was passed in CMD:
-echo "Exec-uting: $@"
+echo "${TIMESTAMP} - Exec-uting: $@"
 exec "$@"
