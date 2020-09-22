@@ -88,13 +88,6 @@ spec:
           #   before kubernetes gives up and "restarts" the "container":
           failureThreshold: 1
 
-        volumeMounts:
-        - name: shared-directory
-          mountPath: /usr/share/nginx/html
-
-      volumes:
-      - name: shared-directory
-        emptyDir: {}
 ---
 
 apiVersion: v1
