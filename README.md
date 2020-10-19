@@ -3,6 +3,9 @@ This repository contains support files to create a very small and simple Docker 
 
 * The readiness probe is assumed to be "GET /readinesscheck.txt" .
 * The livenesss probe is assumed to be "GET /livenesscheck.txt" .
+* The startup probe is assumed to be "GET /startupcheck.txt" .
+
+A [related presentation](Introduction-to-Kubernetes-Probes.pdf) in the PDF format is included in this repository.
 
 # How to use this image:
 
